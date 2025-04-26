@@ -2,15 +2,44 @@ RegisterNetEvent("skapsell:sellItem", function(data)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local item = Player.Functions.GetItemByName(data.name)
+    local seller
+    for _, s in pairs(Config.Sellers) do
+        if s.name == data.sellerName then
+            seller = s
+            break
+        end
+    end
+    
+    if not seller then
+        print("Ogiltig säljare:", data.sellerName)
+        return
+    end
+    
+
+    local itemData = nil
+    for _, v in pairs(seller.itemsForSale) do
+        if v.name == data.name then
+            itemData = v
+            break
+        end
+    end
+
+    if not itemData then
+        TriggerClientEvent("QBCore:Notify", src, "Denna vara kan inte säljas här.", "error")
+        return
+    end
+
+    local price = math.random(itemData.minPrice, itemData.maxPrice)
 
     if item and item.amount >= 1 then
         Player.Functions.RemoveItem(data.name, 1)
-        Player.Functions.AddMoney(Config.BankType, data.price)
-        TriggerClientEvent("QBCore:Notify", src, "You sold " .. data.name .. " for $" .. data.price, "success")
+        Player.Functions.AddMoney(Config.BankType, price)
+        TriggerClientEvent("QBCore:Notify", src, "Du sålde " .. data.name .. " för $" .. price, "success")
     else
-        TriggerClientEvent("QBCore:Notify", src, "You do not have enough of this item!", "error")
+        TriggerClientEvent("QBCore:Notify", src, "Du har inte tillräckligt av denna vara!", "error")
     end
 end)
+
 
 RegisterServerEvent("skapshop:purchaseItem", function(shopName, itemName, price)
     local src = source
@@ -18,9 +47,9 @@ RegisterServerEvent("skapshop:purchaseItem", function(shopName, itemName, price)
 
     if Player.Functions.RemoveMoney("cash", price) then
         Player.Functions.AddItem(itemName, 1)
-        TriggerClientEvent('QBCore:Notify', src, "You bought 1st " .. itemName .. " for $" .. price, "success")
+        TriggerClientEvent('QBCore:Notify', src, "Du köpte 1st " .. itemName .. " för $" .. price, "success")
     else
-        TriggerClientEvent('QBCore:Notify', src, "You can't afford it!", "error")
+        TriggerClientEvent('QBCore:Notify', src, "Du har inte råd!", "error")
     end
 end)
 
@@ -30,18 +59,18 @@ RegisterCommand("givecash", function(source, args, rawCommand)
     local amount = tonumber(args[1])
     
     if not amount or amount <= 0 then
-        TriggerClientEvent('QBCore:Notify', src, "Invalid amount", "error")
+        TriggerClientEvent('QBCore:Notify', src, "Ogiltigt belopp", "error")
         return
     end
     
     if Player.PlayerData.money.cash < amount then
-        TriggerClientEvent('QBCore:Notify', src, "You don't have enough cash", "error")
+        TriggerClientEvent('QBCore:Notify', src, "Du har inte tillräckligt med kontanter", "error")
         return
     end
     
     local nearestPlayer = GetNearestPlayer(src, 2.0)
     if not nearestPlayer then
-        TriggerClientEvent('QBCore:Notify', src, "No player nearby", "error")
+        TriggerClientEvent('QBCore:Notify', src, "Ingen spelare i närheten", "error")
         return
     end
     
@@ -50,10 +79,10 @@ RegisterCommand("givecash", function(source, args, rawCommand)
         Player.Functions.RemoveMoney("cash", amount)
         TargetPlayer.Functions.AddMoney("cash", amount)
         
-        TriggerClientEvent('QBCore:Notify', src, "You gave $" .. amount .. " to " .. TargetPlayer.PlayerData.charinfo.firstname, "success")
-        TriggerClientEvent('QBCore:Notify', nearestPlayer, "You got $" .. amount .. " from " .. Player.PlayerData.charinfo.firstname, "success")
+        TriggerClientEvent('QBCore:Notify', src, "Du gav $" .. amount .. " till " .. TargetPlayer.PlayerData.charinfo.firstname, "success")
+        TriggerClientEvent('QBCore:Notify', nearestPlayer, "Du fick $" .. amount .. " från " .. Player.PlayerData.charinfo.firstname, "success")
     else
-        TriggerClientEvent('QBCore:Notify', src, "Could not find the player", "error")
+        TriggerClientEvent('QBCore:Notify', src, "Kunde inte hitta spelaren", "error")
     end
 end, false)
 
@@ -83,7 +112,7 @@ RegisterNetEvent("SkapBoost:CheckAdmin", function(boostLevel)
     local src = source
 
     if Config.OnlyAdmins and not QBCore.Functions.HasPermission(src, "admin") then
-        TriggerClientEvent("QBCore:Notify", src, "You are not authorized to use this command!", "error")
+        TriggerClientEvent("QBCore:Notify", src, "Du har inte behörighet att använda detta kommando!", "error")
         return
     end
 

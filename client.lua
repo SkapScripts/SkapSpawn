@@ -297,6 +297,7 @@ CreateThread(function()
     end
 end)
 
+
 CreateThread(function()
     for _, seller in pairs(Config.Sellers) do
         for _, spawnPos in pairs(seller.positions) do
@@ -323,23 +324,22 @@ CreateThread(function()
                 EndTextCommandSetBlipName(blip)
             end
 
-            exports.interact:AddModelInteraction({
-                model = pedModel,
-                id = 'skapsell_' .. pedModel,
-                distance = 2.0,
-                interactDst = 1.5,
+            exports['qb-target']:AddTargetEntity(ped, {
                 options = {
                     {
+                        icon = "fas fa-handshake",
                         label = "Sälj varor",
-                        action = function(entity, coords, args)
+                        distance = 2.0,
+                        action = function()
                             if blockedSellers[seller.name] then
-                                QBCore.Functions.Notify("This seller does not want to do business with you right now!", "error")
+                                QBCore.Functions.Notify("Den här säljaren vill inte göra affärer med dig just nu!", "error")
                                 return
                             end
                             OpenSellMenu(seller)
                         end,
-                    },
-                }
+                    }
+                },
+                distance = 2.5,
             })
         end
     end
@@ -347,7 +347,7 @@ end)
 
 function OpenSellMenu(seller)
     local PlayerData = QBCore.Functions.GetPlayerData()
-    local inventory = PlayerData.items
+    local inventory = PlayerData.items or {}
     local sellableItems = {}
 
     for _, item in pairs(seller.itemsForSale) do
@@ -364,7 +364,7 @@ function OpenSellMenu(seller)
     end
 
     if #sellableItems == 0 then
-        QBCore.Functions.Notify("You have no items to sell", "error")
+        QBCore.Functions.Notify("Du har inga varor att sälja!", "error")
         return
     end
 
@@ -383,7 +383,12 @@ function OpenSellMenu(seller)
             txt = "Sälj en " .. item.name,
             params = {
                 event = "skapsell:negotiatePrice",
-                args = { sellerName = seller.name, name = item.name, basePrice = randomPrice, amount = item.amount }
+                args = {
+                    sellerName = seller.name,
+                    name = item.name,
+                    basePrice = randomPrice,
+                    amount = item.amount
+                }
             }
         }
     end
@@ -397,32 +402,44 @@ RegisterNetEvent("skapsell:negotiatePrice", function(data)
 
     local options = {
         {
-            header = "Are you satisfied with $" .. price .. " for " .. data.name .. "?",
+            header = "Är du nöjd med $" .. price .. " för " .. data.name .. "?",
             isMenuHeader = true
         },
         {
-            header = "YEs, sell!",
+            header = "Ja, sälj!",
             params = {
                 event = "skapsell:finalizeSale",
-                args = { sellerName = sellerName, name = data.name, price = price, amount = data.amount }
+                args = data
             }
         },
         {
-            header = "Negotiate (+10%)",
+            header = "Förhandla (+10%)",
             params = {
                 event = "skapsell:negotiate",
-                args = { sellerName = sellerName, name = data.name, price = price, direction = "up", amount = data.amount }
+                args = {
+                    sellerName = sellerName,
+                    name = data.name,
+                    price = price,
+                    direction = "up",
+                    amount = data.amount
+                }
             }
         },
         {
-            header = "Negotiate (-10%)",
+            header = "Förhandla (-10%)",
             params = {
                 event = "skapsell:negotiate",
-                args = { sellerName = sellerName, name = data.name, price = price, direction = "down", amount = data.amount }
+                args = {
+                    sellerName = sellerName,
+                    name = data.name,
+                    price = price,
+                    direction = "down",
+                    amount = data.amount
+                }
             }
         },
         {
-            header = "cancel",
+            header = "Avbryt",
         }
     }
 
@@ -430,7 +447,7 @@ RegisterNetEvent("skapsell:negotiatePrice", function(data)
 end)
 
 RegisterNetEvent("skapsell:negotiate", function(data)
-    print("Try to negotiate with sellers:", data.sellerName)
+    print("Försök att förhandla med säljare:", data.sellerName)
 
     local sellerConfig = nil
     for _, seller in pairs(Config.Sellers) do
@@ -441,7 +458,7 @@ RegisterNetEvent("skapsell:negotiate", function(data)
     end
 
     if not sellerConfig then
-        print("Error: The seller does not exist in Config!")
+        print("Error: Säljaren finns inte i Config!")
         return
     end
 
@@ -454,7 +471,7 @@ RegisterNetEvent("skapsell:negotiate", function(data)
     end
 
     if math.random(1, 100) <= sellerConfig.negotiationChance then
-        QBCore.Functions.Notify("The seller refuses to negotiate further!", "error")
+        QBCore.Functions.Notify("Säljaren vägrar att förhandla vidare!", "error")
         blockedSellers[data.sellerName] = true
         return
     end
@@ -494,7 +511,7 @@ CreateThread(function()
             options = {
                 {
                     icon = "fas fa-shopping-basket",
-                    label = "Buy",
+                    label = "Handla",
                     action = function()
                         OpenShopMenu(shop)
                     end
@@ -509,12 +526,12 @@ function OpenShopMenu(shop)
     local PlayerData = QBCore.Functions.GetPlayerData()
 
     if shop.job and (PlayerData.job.name ~= shop.job or PlayerData.job.grade.level < shop.grade) then
-        QBCore.Functions.Notify("You do not have access to this store.", "error")
+        QBCore.Functions.Notify("Du har inte tillgång till denna butik.", "error")
         return
     end
 
     if shop.gang and PlayerData.gang.name ~= shop.gang then
-        QBCore.Functions.Notify("Only members of " .. shop.gang .. " can shop here.", "error")
+        QBCore.Functions.Notify("Endast medlemmar i " .. shop.gang .. " kan handla här.", "error")
         return
     end
 
@@ -528,7 +545,7 @@ function OpenShopMenu(shop)
     for _, item in pairs(shop.items) do
         menu[#menu + 1] = {
             header = item.label .. " - $" .. item.price,
-            txt = "Buy this item",
+            txt = "Köp detta föremål",
             params = {
                 event = "skapshop:buyItem",
                 args = {
@@ -565,33 +582,31 @@ CreateThread(function()
             FreezeEntityPosition(entity, true)
             TaskStartScenarioInPlace(entity, spawnPoint.scenario, 0, true)
 
-            exports.interact:AddModelInteraction({
-                model = modelHash,
-                offset = vec3(0.0, 0.0, 0.0),
-                name = 'vehicle_spawn_interaction',
-                id = 'unique_vehicle_spawn',
-                distance = 8.0,
-                interactDst = 1.0,
+            exports['qb-target']:AddTargetEntity(entity, {
                 options = {
                     {
-                        label = 'Open Vehicle menu',
-                        action = function(entity, coords, args)
+                        label = 'Öppna Fordonsmeny',
+                        icon = 'fas fa-car',
+                        action = function(entity, distance, data)
                             OpenVehicleMenu(spawnPoint)
                         end,
                     },
                     {
-                        label = 'Return vehicle',
-                        action = function(entity, coords, args)
+                        label = 'Lämna tillbaka fordon',
+                        icon = 'fas fa-undo',
+                        action = function(entity, distance, data)
                             OpenActiveVehiclesMenu(spawnPoint)
                         end,
                     },
-                }
+                },
+                distance = 2.0
             })
         else
             entity = CreateObject(modelHash, spawnPoint.coords.x, spawnPoint.coords.y, spawnPoint.coords.z - 1.0, false, false, true)
             SetEntityHeading(entity, spawnPoint.coords.w)
             FreezeEntityPosition(entity, true)
         end
+
 
         table.insert(spawnedEntities, entity)
 
@@ -611,7 +626,7 @@ end)
 
 function OpenActiveVehiclesMenu(spawnPoint)
     local activeMenu = {
-        { header = "Produced vehicles", isMenuHeader = true }
+        { header = "Framtagna fordon", isMenuHeader = true }
     }
 
     for _, veh in pairs(activeVehicles) do
@@ -641,9 +656,9 @@ RegisterNetEvent("skapsell:returnVehicle", function(data)
                 break
             end
         end
-        QBCore.Functions.Notify("The vehicle has been parked back.", "success")
+        QBCore.Functions.Notify("Fordonet har parkerats tillbaka.", "success")
     else
-        QBCore.Functions.Notify("The vehicle is not within 20 meters.", "error")
+        QBCore.Functions.Notify("Fordonet är inte inom 20 meter.", "error")
     end
     Wait(500) 
     OpenActiveVehiclesMenu(data.spawnPoint)
@@ -653,13 +668,13 @@ function OpenVehicleMenu(spawnPoint)
     local PlayerData = QBCore.Functions.GetPlayerData()
 
     if spawnPoint.job and (PlayerData.job.name ~= spawnPoint.job or PlayerData.job.grade.level < (spawnPoint.jobGrade or 0)) then
-        QBCore.Functions.Notify("You are not authorized to use these vehicles.", "error")
+        QBCore.Functions.Notify("Du har inte behörighet att använda dessa fordon.", "error")
         return
     end
 
     local vehicleMenu = {
         {
-            header = "Choose Vehicle",
+            header = "Välj fordon",
             isMenuHeader = true
         }
     }
@@ -693,9 +708,9 @@ function GiveVehicleKeys(vehicle)
         end
 
         ownedVehicles[vehiclePlate] = playerId
-        QBCore.Functions.Notify("You have received the keys to the vehicle!", "success")
+        QBCore.Functions.Notify("Du har fått nycklarna till fordonet!", "success")
     else
-        QBCore.Functions.Notify("You already have keys for this vehicle.", "error")
+        QBCore.Functions.Notify("Du har redan nycklar till detta fordon.", "error")
     end
 end
 
@@ -704,7 +719,7 @@ function RemoveVehicleKeys(vehicle)
 
     if not vehiclePlate or vehiclePlate == "" then
         print("Fordonet har inget giltigt registreringsnummer.")
-        QBCore.Functions.Notify("The vehicle does not have a valid registration number.", "error")
+        QBCore.Functions.Notify("Fordonet har inget giltigt registreringsnummer.", "error")
         return
     end
     print("ownedVehicles innehåll: ")
@@ -726,13 +741,13 @@ function RemoveVehicleKeys(vehicle)
                 exports['qs-vehiclekeys']:RemoveKeys(plate, model)
             end
 
-            QBCore.Functions.Notify("The keys have been removed from the vehicle.", "success")
+            QBCore.Functions.Notify("Nycklarna har tagits bort från fordonet.", "success")
         else
-            QBCore.Functions.Notify("You do not own the keys to this vehicle.", "error")
+            QBCore.Functions.Notify("Du äger inte nycklarna till detta fordon.", "error")
         end
     else
         print("Fordonet " .. vehiclePlate .. " finns inte i nyckelregistret.")
-        QBCore.Functions.Notify("The vehicle is not in the key register.", "error")
+        QBCore.Functions.Notify("Fordonet finns inte i nyckelregistret.", "error")
     end
 end
 
