@@ -332,7 +332,7 @@ CreateThread(function()
                         distance = 2.0,
                         action = function()
                             if blockedSellers[seller.name] then
-                                QBCore.Functions.Notify("Den här säljaren vill inte göra affärer med dig just nu!", "error")
+                                QBCore.Functions.Notify("This seller don't want to speak with you right now.", "error")
                                 return
                             end
                             OpenSellMenu(seller)
@@ -364,13 +364,13 @@ function OpenSellMenu(seller)
     end
 
     if #sellableItems == 0 then
-        QBCore.Functions.Notify("Du har inga varor att sälja!", "error")
+        QBCore.Functions.Notify("You got nothing to sell!", "error")
         return
     end
 
     local sellMenu = {
         {
-            header = "Sälj dina varor",
+            header = "Sell your items,
             isMenuHeader = true
         }
     }
@@ -380,7 +380,7 @@ function OpenSellMenu(seller)
 
         sellMenu[#sellMenu + 1] = {
             header = item.name .. " - $" .. randomPrice,
-            txt = "Sälj en " .. item.name,
+            txt = "sell a " .. item.name,
             params = {
                 event = "skapsell:negotiatePrice",
                 args = {
@@ -402,18 +402,18 @@ RegisterNetEvent("skapsell:negotiatePrice", function(data)
 
     local options = {
         {
-            header = "Är du nöjd med $" .. price .. " för " .. data.name .. "?",
+            header = "are you okay with $" .. price .. " för " .. data.name .. "?",
             isMenuHeader = true
         },
         {
-            header = "Ja, sälj!",
+            header = "yeaa, sell!",
             params = {
                 event = "skapsell:finalizeSale",
                 args = data
             }
         },
         {
-            header = "Förhandla (+10%)",
+            header = "negotiate (+10%)",
             params = {
                 event = "skapsell:negotiate",
                 args = {
@@ -426,7 +426,7 @@ RegisterNetEvent("skapsell:negotiatePrice", function(data)
             }
         },
         {
-            header = "Förhandla (-10%)",
+            header = "negotiate (-10%)",
             params = {
                 event = "skapsell:negotiate",
                 args = {
@@ -439,7 +439,7 @@ RegisterNetEvent("skapsell:negotiatePrice", function(data)
             }
         },
         {
-            header = "Avbryt",
+            header = "cancel",
         }
     }
 
@@ -471,7 +471,7 @@ RegisterNetEvent("skapsell:negotiate", function(data)
     end
 
     if math.random(1, 100) <= sellerConfig.negotiationChance then
-        QBCore.Functions.Notify("Säljaren vägrar att förhandla vidare!", "error")
+        QBCore.Functions.Notify("The seller refuses to negotiate!", "error")
         blockedSellers[data.sellerName] = true
         return
     end
@@ -511,7 +511,7 @@ CreateThread(function()
             options = {
                 {
                     icon = "fas fa-shopping-basket",
-                    label = "Handla",
+                    label = "Purschase",
                     action = function()
                         OpenShopMenu(shop)
                     end
@@ -526,12 +526,12 @@ function OpenShopMenu(shop)
     local PlayerData = QBCore.Functions.GetPlayerData()
 
     if shop.job and (PlayerData.job.name ~= shop.job or PlayerData.job.grade.level < shop.grade) then
-        QBCore.Functions.Notify("Du har inte tillgång till denna butik.", "error")
+        QBCore.Functions.Notify("You don't have access to this shop", "error")
         return
     end
 
     if shop.gang and PlayerData.gang.name ~= shop.gang then
-        QBCore.Functions.Notify("Endast medlemmar i " .. shop.gang .. " kan handla här.", "error")
+        QBCore.Functions.Notify("Only members in " .. shop.gang .. " can purchase things here.", "error")
         return
     end
 
@@ -656,9 +656,9 @@ RegisterNetEvent("skapsell:returnVehicle", function(data)
                 break
             end
         end
-        QBCore.Functions.Notify("Fordonet har parkerats tillbaka.", "success")
+        QBCore.Functions.Notify("Vehicle stored.", "success")
     else
-        QBCore.Functions.Notify("Fordonet är inte inom 20 meter.", "error")
+        QBCore.Functions.Notify("Vehicle is not within 20 meters.", "error")
     end
     Wait(500) 
     OpenActiveVehiclesMenu(data.spawnPoint)
@@ -668,7 +668,7 @@ function OpenVehicleMenu(spawnPoint)
     local PlayerData = QBCore.Functions.GetPlayerData()
 
     if spawnPoint.job and (PlayerData.job.name ~= spawnPoint.job or PlayerData.job.grade.level < (spawnPoint.jobGrade or 0)) then
-        QBCore.Functions.Notify("Du har inte behörighet att använda dessa fordon.", "error")
+        QBCore.Functions.Notify("You don't have the right access to access these vehicles.", "error")
         return
     end
 
@@ -708,9 +708,9 @@ function GiveVehicleKeys(vehicle)
         end
 
         ownedVehicles[vehiclePlate] = playerId
-        QBCore.Functions.Notify("Du har fått nycklarna till fordonet!", "success")
+        QBCore.Functions.Notify("You got the keys to the vehicle!", "success")
     else
-        QBCore.Functions.Notify("Du har redan nycklar till detta fordon.", "error")
+        QBCore.Functions.Notify("You already got the keys to this veh.", "error")
     end
 end
 
@@ -719,7 +719,7 @@ function RemoveVehicleKeys(vehicle)
 
     if not vehiclePlate or vehiclePlate == "" then
         print("Fordonet har inget giltigt registreringsnummer.")
-        QBCore.Functions.Notify("Fordonet har inget giltigt registreringsnummer.", "error")
+        QBCore.Functions.Notify("the vehicle doesn't have any plate", "error")
         return
     end
     print("ownedVehicles innehåll: ")
@@ -741,13 +741,13 @@ function RemoveVehicleKeys(vehicle)
                 exports['qs-vehiclekeys']:RemoveKeys(plate, model)
             end
 
-            QBCore.Functions.Notify("Nycklarna har tagits bort från fordonet.", "success")
+            QBCore.Functions.Notify("Vehicle keys removed.", "success")
         else
-            QBCore.Functions.Notify("Du äger inte nycklarna till detta fordon.", "error")
+            QBCore.Functions.Notify("You don't own the keys", "error")
         end
     else
         print("Fordonet " .. vehiclePlate .. " finns inte i nyckelregistret.")
-        QBCore.Functions.Notify("Fordonet finns inte i nyckelregistret.", "error")
+        QBCore.Functions.Notify("Vehicle does not exist in the key register.", "error")
     end
 end
 
@@ -773,7 +773,7 @@ RegisterNetEvent("skapsell:spawnVehicle", function(data)
 
     GiveVehicleKeys(veh)
 
-    QBCore.Functions.Notify("Du har fått ett fordon!", "success")
+    QBCore.Functions.Notify("You got a vehicle!", "success")
 end)
 
 RegisterNetEvent("skapsell:returnVehicle", function(data)
@@ -787,9 +787,9 @@ RegisterNetEvent("skapsell:returnVehicle", function(data)
             end
         end
         RemoveVehicleKeys(veh)
-        QBCore.Functions.Notify("Fordonet har parkerats tillbaka.", "success")
+        QBCore.Functions.Notify("Veh stored.", "success")
     else
-        QBCore.Functions.Notify("Fordonet är inte inom 20 meter.", "error")
+        QBCore.Functions.Notify("Veh is not within 20 meters", "error")
     end
     Wait(500) 
     OpenActiveVehiclesMenu(data.spawnPoint)
@@ -845,10 +845,10 @@ RegisterCommand("boost", function(source, args)
         if boostLevel and boostLevel >= 1 and boostLevel <= 10 then
             TriggerServerEvent("SkapBoost:CheckAdmin", boostLevel)
         else
-            QBCore.Functions.Notify("Ange en boost-nivå mellan 1-10", "error")
+            QBCore.Functions.Notify("Boost level between 1-10", "error")
         end
     else
-        QBCore.Functions.Notify("Du måste sitta i ett fordon!", "error")
+        QBCore.Functions.Notify("Need to sit in a veh!", "error")
     end
 end, false)
 
@@ -868,7 +868,7 @@ RegisterNetEvent("SkapBoost:ApplyBoost", function(boostLevel)
         SetVehicleEnginePowerMultiplier(vehicle, boostLevel * 10) 
         SetVehicleEngineTorqueMultiplier(vehicle, 1.0 + (boostLevel * 0.2)) 
 
-        QBCore.Functions.Notify("Fordonet har boostats till nivå " .. boostLevel, "success")
+        QBCore.Functions.Notify("Veh has been boosted to " .. boostLevel, "success")
     end
 end)
 
@@ -884,13 +884,13 @@ RegisterCommand("setnormal", function(source, args)
             SetVehicleEnginePowerMultiplier(vehicle, 1.0)
             SetVehicleEngineTorqueMultiplier(vehicle, 1.0)
 
-            QBCore.Functions.Notify("Fordonet har återställts till normal prestanda!", "success")
+            QBCore.Functions.Notify("Veh has ben set back to normal!", "success")
             originalHandling[plate] = nil
         else
-            QBCore.Functions.Notify("Ingen boost har applicerats på detta fordon.", "error")
+            QBCore.Functions.Notify("no boost has ben set on this veh.", "error")
         end
     else
-        QBCore.Functions.Notify("Du måste sitta i ett fordon!", "error")
+        QBCore.Functions.Notify("need to sit in veh!", "error")
     end
 end, false)
 
