@@ -41,13 +41,12 @@ Config.SpecialVehicles = { --Under here you can add vehicles that you want to ha
 
 
 Config.Blips = { -- Here you can add blips.
-    {name = "Brandstationen", coords = vector3(386.87, 278.16, 109.02), sprite = 60, color = 3, scale = 0.8},
+    {name = "Fire Department", coords = vector3(386.87, 278.16, 109.02), sprite = 60, color = 3, scale = 0.8},
     {name = "Taxi", coords = vector3(371.52, -1598.01, 29.29), sprite = 227, color = 1, scale = 0.8},
     {name = "Vanilla Unicorn", coords = vector3(113.50, -1294.68, 48.62), sprite = 121, color = 1, scale = 0.8},
-    {name = "Colombia Bro", coords = vector3(1443.46, -2622.43, 48.45), sprite = 84, color = 1, scale = 0.8},
-    {name = "Henkes Bar & Kök", coords = vector3(414.77, -1494.52, 30.16), sprite = 84, color = 1, scale = 0.8},
-    {name = "Motellet", coords = vector3(346.62, -199.56, 58.02), sprite = 475, color = 1, scale = 1.2},
-    {name = "Roggans Fastighetsbyrå AB", coords = vector3(-591.80, -344.46, 35.15), sprite = 475, color = 1, scale = 0.8}
+    {name = "Colombia ", coords = vector3(1443.46, -2622.43, 48.45), sprite = 84, color = 1, scale = 0.8},
+    {name = "Motel", coords = vector3(346.62, -199.56, 58.02), sprite = 475, color = 1, scale = 1.2},
+    {name = "Roggans Realestate", coords = vector3(-591.80, -344.46, 35.15), sprite = 475, color = 1, scale = 0.8}
 }
 
 -- This is for the Config.Peds - These models that are here, Is the models that will be able to spawn on the vectors in Config.Peds
@@ -100,7 +99,7 @@ Config.Teleports = {
 
 Config.Sellers = {
     {
-        name = "Juvelerare",
+        name = "jewellery",
         pedModel = "s_m_y_dealer_01",
         positions = {
             vector4(123.4, -1234.5, 29.3, 75.0),
@@ -167,24 +166,21 @@ Config.Shops = { -- Job shops
             { name = "weapon_pumpshotgun", label = "Pump Shotugn", price = 0 },
             { name = "weapon_smg", label = "MP5", price = 0 },
             { name = "weapon_carbinerifle", label = "M4", price = 0 },
-            { name = "weapon_nightstick", label = "Batong", price = 0 },
+            { name = "weapon_nightstick", label = "nightstick", price = 0 },
             { name = "pistol_ammo", label = "Pistol Ammo", price = 0 },
             { name = "smg_ammo", label = "MP5 Ammo", price = 0 },
-            { name = "shotgun_ammo", label = "Sotgun Ammo", price = 0 },
+            { name = "shotgun_ammo", label = "Shotgun Ammo", price = 0 },
             { name = "rifle_ammo", label = "M4 Ammo", price = 0 },
-            { name = "pepperspray", label = "Pepparspray", price = 0 },
-            { name = "handcuffs", label = "Handfängsel", price = 0 },
-            { name = "weapon_flashlight", label = "Ficklampa", price = 0 },
-            { name = "empty_evidence_bag", label = "Tom bevis påse", price = 0 },
+            { name = "pepperspray", label = "Pepperspray", price = 0 },
+            { name = "handcuffs", label = "handcuffs", price = 0 },
+            { name = "weapon_flashlight", label = "Flashlight", price = 0 },
+            { name = "empty_evidence_bag", label = "Empty Evidence Bag", price = 0 },
             { name = "police_stormram", label = "Stormarm", price = 0 },
-            { name = "armor", label = "Skyddsväst", price = 0 },
+            { name = "armor", label = "armor", price = 0 },
             { name = "radio", label = "Radio", price = 0 },
-            { name = "heavyarmor", label = "tung väst", price = 0 },
-            { name = "alcoholtester", label = "Alkohol mätare", price = 0 },
-            { name = "policekey", label = "Polis Nyckel", price = 0 },
-            { name = "policechefkey", label = "Chefsnyckel", price = 0 },
-            { name = "policehelikey", label = "Helikopter nyckel", price = 0 },
-            { name = "polisdator", label = "Polis Datorn", price = 0 },
+            { name = "heavyarmor", label = "heavy armor", price = 0 },
+            { name = "alcoholtester", label = "alcoholtester", price = 0 },
+            { name = "polisdator", label = "Polis MDT", price = 0 },
         }
     },
     {name = "Polisbutik2", type = "ped", model = "s_m_y_blackops_02", coords = vector4(-402.23, -332.43, 53.26, 207.11), emote = "WORLD_HUMAN_CLIPBOARD", job = "police", grade = 0,
@@ -217,135 +213,6 @@ Config.Shops = { -- Job shops
             { name = "vic5",        label = 'Vicodin 5MG',     price = 0 },
             { name = "defib",        label = 'defib',     price = 0 },
             { name = "sedative",        label = 'sedative',     price = 0 },
-        }
-    },
-    {name = "mecko", type = "ped", model = "mp_m_counterfeit_01", coords = vector4(45.10, -1755.25, 29.61, 224.61), emote = "WORLD_HUMAN_SUPERHERO", job = "mechanic", grade = 0,
-        items = {
-            { name = "engine_oil", label = "Motoroljda", price = 0 },
-            { name = "tyre_replacement", label = "Däck", price = 0 },
-            { name = "clutch_replacement", label = "Koppling", price = 0 },
-            { name = "air_filter", label = "Luftfilter", price = 0 },
-            { name = "spark_plug", label = "Tändstift", price = 0 },
-            { name = "suspension_parts", label = "Suspension", price = 0 },
-            { name = "brakepad_replacement", label = "bromsbelägg", price = 0 },
-            { name = "i4_engine", label = "I4 Motor", price = 0 },
-            { name = "v6_engine", label = "V6 Motor", price = 0 },
-            { name = "v8_engine", label = "V8 Motor", price = 0 },
-            { name = "v12_engine", label = "V12 Motor", price = 0 },
-            { name = "turbocharger", label = "Turbo", price = 0 },
-            { name = "ev_motor", label = "EV Motor", price = 0 },
-            { name = "ev_battery", label = "EV Batteri", price = 0 },
-            { name = "ev_coolant", label = "EV Kylvätska", price = 0 },
-            { name = "awd_drivetrain", label = "AWD Drivlina", price = 0 },
-            { name = "rwd_drivetrain", label = "RWD Drivlina", price = 0 },
-            { name = "fwd_drivetrain", label = "FWD Drivlina", price = 0 },
-            { name = "slick_tyres", label = "Slick Däck", price = 0 },
-            { name = "semi_slick_tyres", label = "Semi Slick däck", price = 0 },
-            { name = "offroad_tyres", label = "Offroad däck", price = 0 },
-            { name = "ceramic_brakes", label = "Ceramic Bromsar", price = 0 },
-            { name = "drift_tuning_kit", label = "Drift Tuning Kit", price = 0 },
-            { name = "lighting_controller", label = "Belysningskontroll", price = 0 },
-            { name = "stancing_kit", label = "Stans", price = 0 },
-            { name = "cosmetic_part", label = "Body Kit", price = 0 },
-            { name = "respray_kit", label = "Omlackerings Kit", price = 0 },
-            { name = "vehicle_wheels", label = "Fordon hjul Set", price = 0 },
-            { name = "tyre_smoke_kit", label = "Däckrök Kit", price = 0 },
-            { name = "extras_kit", label = "Extras Kit", price = 0 },
-            { name = "nitrous_bottle", label = "Nitrous flaska", price = 0 },
-            { name = "empty_nitrous_bottle", label = "Tom Nitrous flaska", price = 0 },
-            { name = "nitrous_install_kit", label = "Nitrous Installerings Kit", price = 0 },
-            { name = "cleaning_kit", label = "Rengöringssats", price = 0 },
-            { name = "repair_kit", label = "Fordonsreparation Kit", price = 0 },
-            { name = "duct_tape", label = "Silvertejp", price = 0 },
-            { name = "performance_part", label = "Performance Part", price = 0 },
-            { name = "mechanic_tablet", label = "surfplatta", price = 0 },
-            { name = "manual_gearbox", label = "Manuell växellåda", price = 0 },
-            { name = "cosmetic_part", label = "Kosmetisk del", price = 0 },
-        }
-    },
-    { name = "ambulansen", type = "ped", model = "cs_mrs_thornhill", coords = vector4(74.98, -364.33, 39.38, 254.05), emote = "PROP_HUMAN_ATM", job = nil, grade = 3,
-        items = {
-            { name = "wheelchair", label = "Rullstol", price = 5000 },
-            { name = "crutch", label = "krycka", price = 2500 },
-            { name = "bandage", label = "bandage", price = 500 },
-            { name = "painkiller", label = "Smärtlindrande", price = 500 },
-        }
-    },
-    {name = "outbreak", type = "ped", model = "g_m_y_lost_01", coords = vector4(-1309.65, -1067.46, -1.44, 29.38), emote = "WORLD_HUMAN_COP_IDLES", job = nil, gang = "outbreakmc", grade = 0,
-        items = {
-            { name = "outbreakmc", label = "Outbreak Nyckel", price = 250 },
-        }
-    },
-    {name = "vanillaunicorn", type = "ped", model = "cs_dreyfuss", coords = vector4(133.34, -1295.38, 29.23, 212.45), emote = "WORLD_HUMAN_COP_IDLES", job = "vanillaunicorn", gang = nil, grade = 0,
-        items = {
-            { name = "vanillakey", label = "Vanilla Nyckel", price = 250 },
-        }
-    },
-    {name = "bellatores", type = "ped", model = "a_m_m_salton_02", coords = vector4(345.77, -2700.37, 1.71, 224.75), emote = "WORLD_HUMAN_COP_IDLES", job = nil, gang = "bellatores", grade = 0,
-        items = {
-            { name = "bellatoreskey", label = "Bellatores Nyckel", price = 250 },
-        }
-    },
-    {name = "maklare", type = "ped", model = "cs_nigel", coords = vector4(-594.13, -345.70, 35.15, 110.40), emote = "WORLD_HUMAN_COP_IDLES", job = "realestate", gang = nil, grade = 0,
-        items = {
-            { name = "maklarekey", label = "Mäklare Nyckel", price = 250 },
-        }
-    },
-    {name = "outbreak2", type = "ped", model = "g_m_y_lost_01", coords = vector4(-1362.44, -1059.04, 3.61, 125.84), emote = "WORLD_HUMAN_COP_IDLES", job = nil, gang = "outbreakmc", grade = 0,
-        items = {
-            { name = "whiskey", label = "whiskey", price = 50 },
-            { name = "vodka", label = "vodka", price = 50 },
-            { name = "beer", label = "Öl", price = 50 },
-            { name = "water_bottle", label = "Vatten", price = 10 },
-            { name = "ale", label = "ale", price = 50 },
-            { name = "whiskey", label = "whiskey", price = 50 },
-        }
-    },
-    {name = "racingboosting", type = "ped", model = "ig_maude", coords = vector4(-476.25, -56.34, 39.99, 38.19), emote = "WORLD_HUMAN_CONST_DRILL", job = nil, gang = nil,grade = 0,
-        items = {
-            { name = "boostingtablet", label = "Boosting Platta", price = 10000 },
-            { name = "hackingdevice", label = "Hacker enhet", price = 9500 },
-            { name = "gpshackingdevice", label = "Hacker enhet GPS", price = 10000 },
-            { name = "racing_gps", label = "Racing Platta", price = 5000 },
-        }
-    },
-    {name = "vanillaunicorn", type = "ped", model = "a_m_y_business_02", coords = vector4(132.62, -1277.33, 29.26, 104.82), emote = "WORLD_HUMAN_GOLF_PLAYER", job = nil, gang = nil, grade = 0,
-        items = {
-            { name = "beer", label = "Öl", price = 80 },
-            { name = "whiskey", label = "Whiskey", price = 120 },
-            { name = "vodka", label = "Vodka", price = 130 },
-            { name = "grape", label = "Grape", price = 85 },
-            { name = "wine", label = "Vin", price = 100 },
-            { name = "blue_lagoon", label = "Blue Lagoon", price = 130 },
-            { name = "midori_sour", label = "Midori Sour", price = 130 },
-            { name = "moscow_mule", label = "Moscow Mule", price = 130 },
-            { name = "gin_tonic", label = "Gin & Tonic", price = 130 },
-            { name = "pilsner", label = "pilsner", price = 90 },
-            { name = "bordeaux", label = "Bordeaux", price = 95 },
-            { name = "pinot_nior", label = "Pinot Nior", price = 120 },
-            { name = "bubbletea_strawberry", label = "Strawberry Bubble Tea", price = 40 },
-        }
-    },
-    {name = "sjukhus", type = "ped", model = "a_m_y_business_02", coords = vector4(63.33, -361.40, 43.93, 71.23), emote = "WORLD_HUMAN_GOLF_PLAYER", job = "ambulance", gang = nil, grade = 0,
-        items = {
-            { name = "sjukvardkey", label = "Nyckel", price = 250 },
-        }
-    },
-    { name = "sectiond", type = "ped", model = "a_m_m_farmer_01", coords = vector4(415.22, -1502.89,30.11, 71.43), emote = "PROP_HUMAN_SEAT_CHAIR_DRINK_BEER", job = nil, gang = nil, grade = 0,
-        items = {
-            { name = "beer", label = "Öl", price = 80 },
-            { name = "whiskey", label = "Whiskey", price = 120 },
-            { name = "vodka", label = "Vodka", price = 130 },
-            { name = "grape", label = "Grape", price = 85 },
-            { name = "wine", label = "Vin", price = 100 },
-            { name = "blue_lagoon", label = "Blue Lagoon", price = 130 },
-            { name = "midori_sour", label = "Midori Sour", price = 130 },
-            { name = "moscow_mule", label = "Moscow Mule", price = 130 },
-            { name = "gin_tonic", label = "Gin & Tonic", price = 130 },
-            { name = "pilsner", label = "pilsner", price = 90 },
-            { name = "bordeaux", label = "Bordeaux", price = 95 },
-            { name = "pinot_nior", label = "Pinot Nior", price = 120 },
-            { name = "bubbletea_strawberry", label = "Strawberry Bubble Tea", price = 40 },
         }
     }
 }
